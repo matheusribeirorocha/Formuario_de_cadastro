@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cadastro para Evento</title>
+  <style>
+    :root {
+      --bg-color: #f0f0f0;
+      --text-color: #000;
+      --form-bg: #fff;
+    }
+
+    [data-theme="dark"] {
+      --bg-color: #121212;
+      --text-color: #eee;
+      --form-bg: #1f1f1f;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 20px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    form {
+      background-color: var(--form-bg);
+      padding: 20px;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      max-width: 600px;
+      margin: auto;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="date"],
+    select,
+    textarea {
+      padding: 8px;
+      width: 100%;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+
+    .checkbox-group,
+    .radio-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .error {
+      color: red;
+      font-size: 0.9em;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 30px;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      text-align: left;
+    }
+
+    ul, ol {
+      max-width: 600px;
+      margin: 20px auto;
+    }
+
+    .theme-toggle {
+      margin: 10px auto;
+      display: block;
+      padding: 10px 15px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 600px) {
+      form {
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+<body id="topo" data-theme="light">
+  <header>
+    <h1>Formulário de Cadastro para Evento</h1>
+    <button class="theme-toggle" onclick="toggleTheme()">Trocar Tema</button>
+  </header>
+
+  <form id="cadastroForm">
+    <div>
+      <label>Nome Completo:</label>
+      <input type="text" id="nome" maxlength="100" />
+      <span class="error" id="erroNome"></span>
+      <div><small>Caracteres restantes: <span id="contador">100</span></small></div>
+    </div>
+
+    <div>
+      <label>E-mail:</label>
+      <input type="email" id="email" />
+      <span class="error" id="erroEmail"></span>
+    </div>
+
+    <div>
+      <label>Data de Nascimento:</label>
+      <input type="date" id="nascimento" />
+      <span class="error" id="erroNascimento"></span>
+    </div>
+
+    <div>
+      <label>Gênero:</label>
+      <div class="radio-group">
+        <label><input type="radio" name="genero" value="Masculino" /> Masculino</label>
+        <label><input type="radio" name="genero" value="Feminino" /> Feminino</label>
+        <label><input type="radio" name="genero" value="Outro" /> Outro</label>
+      </div>
+      <span class="error" id="erroGenero"></span>
+    </div>
+
+    <div>
+      <label>Interesses:</label>
+      <div class="checkbox-group">
+        <label><input type="checkbox" value="Tecnologia" /> Tecnologia</label>
+        <label><input type="checkbox" value="Educação" /> Educação</label>
+        <label><input type="checkbox" value="Saúde" /> Saúde</label>
+      </div>
+      <span class="error" id="erroInteresses"></span>
+    </div>
+
+    <div>
+      <label>Área de atuação:</label>
+      <select id="atuacao">
+        <option value="">Selecione</option>
+        <option value="Desenvolvimento">Desenvolvimento</option>
+        <option value="Design">Design</option>
+        <option value="Marketing">Marketing</option>
+        <option value="RH">RH</option>
+      </select>
+      <span class="error" id="erroAtuacao"></span>
+    </div>
+
+    <button type="submit">Enviar</button>
+  </form>
+
+  <section id="participantes">
+    <h2>Participantes Cadastrados</h2>
+    <table id="tabelaParticipantes">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>E-mail</th>
+          <th>Nascimento</th>
+          <th>Gênero</th>
+          <th>Interesses</th>
+          <th>Atuação</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Regras do Evento</h2>
+    <ol>
+      <li>Chegar com 15 minutos de antecedência</li>
+      <li>Levar documento com foto</li>
+      <li>Respeitar os horários das palestras</li>
+    </ol>
+
+    <h2>Coisas para levar</h2>
+    <ul>
+      <li>Documento de identidade</li>
+      <li>Bloco de anotações</li>
+      <li>Caneta</li>
+      <li>Garrafa de água</li>
+    </ul>
+
+    <h3>Links úteis</h3>
+    <p>
+      <a href="https://www.eventoficticio.com" target="_blank">Página Oficial do Evento</a> |
+      <a href="#topo">Voltar ao topo</a>
+    </p>
+  </section>
+
+  <script>
+    const form = document.getElementById('cadastroForm');
+    const tabela = document.getElementById('tabelaParticipantes').querySelector('tbody');
+    const contador = document.getElementById('contador');
+
+    // Contador de caracteres
+    document.getElementById('nome').addEventListener('input', function () {
+      const max = 100;
+      contador.textContent = max - this.value.length;
+    });
+
+    // Troca de tema
+    function toggleTheme() {
+      const body = document.body;
+      const currentTheme = body.getAttribute('data-theme');
+      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+      body.setAttribute('data-theme', newTheme);
+      localStorage.setItem('tema', newTheme);
+    }
+
+    // Restaurar tema salvo
+    window.addEventListener('load', () => {
+      const temaSalvo = localStorage.getItem('tema');
+      if (temaSalvo) {
+        document.body.setAttribute('data-theme', temaSalvo);
+      }
+    });
+
+    // Validação
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      let valido = true;
+
+      const nome = document.getElementById('nome').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const nascimento = document.getElementById('nascimento').value;
+      const genero = document.querySelector('input[name="genero"]:checked');
+      const interesses = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(el => el.value);
+      const atuacao = document.getElementById('atuacao').value;
+
+      // Limpar mensagens de erro
+      document.quer
